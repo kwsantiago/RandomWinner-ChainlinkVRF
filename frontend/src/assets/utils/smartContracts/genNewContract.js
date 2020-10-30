@@ -16,36 +16,47 @@ const abi = [
 		],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "randomWinnerAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	}
 ]
 
-const factoryAddress = "0xa50134F4d9E31C4081A134088019Fd30176eaFFe";
+const factoryAddress = "0xb277B2937Ad2c77548DdC3101E6f255DB3cd829a";
 const factoryContract = new eth.Contract(abi, factoryAddress);
 
 const tx = {
   from: null,
-  // Factory Contract
   to: factoryAddress,
   // gas limit for createRandomWinner
   data: factoryContract.methods.createRandomWinner().encodeABI()
 };
 
-const newRandomWinnerContract = async () => {
-    var allowed = true;
+async function generateNewContract(){
     await window.web3.eth.getAccounts().then(async e => {
         if(!e[0]){
             window.ethereum && window.ethereum.enable();
-            allowed = false;
             return;
         }
         tx.from = e[0];
         var result = await window.web3.eth.sendTransaction(tx);
         return result;
     })
-    if(!allowed)
-        return [];
-    var result = await factoryContract.methods.createRandomWinner().call();
-    return result;
+}
+
+const newRandomWinnerContract = async () => {
+    await generateNewContract();
+    return await factoryContract.methods.randomWinnerAddress().call();
 }
 
 export { newRandomWinnerContract };
