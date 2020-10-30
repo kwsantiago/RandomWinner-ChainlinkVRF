@@ -5,6 +5,7 @@
 
 pragma solidity ^0.6.0;
 
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
 
 // 
 /*
@@ -120,14 +121,14 @@ library SafeMath_Chainlink {
     * - Subtraction cannot overflow.
     */
   function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-    require(b <= a, "SafeMath: subtraction overflow");
+    require(b <= a, "SafeMath:subtraction overflow");
     uint256 c = a - b;
 
     return c;
   }
 
   /**
-    * @dev Returns the multiplicatio of two unsigned integers, reverting on
+    * @dev Returns the multiplication of two unsigned integers, reverting on
     * overflow.
     *
     * Counterpart to Solidity's `*` operator.
@@ -392,10 +393,14 @@ abstract contract VRFConsumerBase is VRFRequestIDBase {
 }
 
 contract RandomWinnerFactory {
-    RandomWinner[] public contracts;
-    function createRandomWinner() external {
+    IERC20 linkToken = IERC20(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
+    address public randomWinnerAddress;
+    function createRandomWinner() external returns(address) {
+        uint private _amount = 2 * 10 ** 18; // 0.1 LINK
         RandomWinner randomWinner = new RandomWinner();
-        contracts.push(randomWinner);
+        linkToken.transfer(address(randomWinner), _amount);
+        randomWinnerAddress = address(randomWinner);
+        return address(randomWinner);
     }
 }
 
@@ -456,6 +461,9 @@ contract RandomWinner is Ownable, VRFConsumerBase {
     function updateAddressList(address[] memory _addresses) public onlyOwner {
         require(!winnersSelected);
         
+        uint256 randomNum = getRandomNumber();
+        // do this
+        
         for (uint256 i = 0; i < _addresses.length; i++) {
             addressList.push(_addresses[i]);
             addressCount++;
@@ -510,4 +518,4 @@ contract RandomWinner is Ownable, VRFConsumerBase {
     function isWinner(address _address) public view returns (bool) {
         return winnersMapping[_address];
     }
-}
+} 
