@@ -396,7 +396,7 @@ contract RandomWinnerFactory {
     IERC20 linkToken = IERC20(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
     address public randomWinnerAddress;
     function createRandomWinner() external returns(address) {
-        uint private _amount = 2 * 10 ** 18; // 0.1 LINK
+        uint private _amount = 2 * 10 ** 18; // 2 LINK
         RandomWinner randomWinner = new RandomWinner();
         linkToken.transfer(address(randomWinner), _amount);
         randomWinnerAddress = address(randomWinner);
