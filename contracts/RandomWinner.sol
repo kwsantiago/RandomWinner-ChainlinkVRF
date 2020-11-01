@@ -121,7 +121,7 @@ library SafeMath_Chainlink {
     * - Subtraction cannot overflow.
     */
   function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-    require(b <= a, "SafeMath:subtraction overflow");
+    require(b <= a, "SafeMath:ubtraction overflow");
     uint256 c = a - b;
 
     return c;
@@ -395,12 +395,12 @@ abstract contract VRFConsumerBase is VRFRequestIDBase {
 contract RandomWinnerFactory {
     IERC20 linkToken = IERC20(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
     address public randomWinnerAddress;
-    function createRandomWinner() external returns(address) {
-        uint private _amount = 2 * 10 ** 18; // 2 LINK
+    uint internal _amount = 0.3 * 10 ** 18;
+    function createRandomWinner(address[] memory _addresses) external {
         RandomWinner randomWinner = new RandomWinner();
         linkToken.transfer(address(randomWinner), _amount);
+        randomWinner.updateAddressList(_addresses);
         randomWinnerAddress = address(randomWinner);
-        return address(randomWinner);
     }
 }
 
@@ -460,13 +460,11 @@ contract RandomWinner is Ownable, VRFConsumerBase {
     
     function updateAddressList(address[] memory _addresses) public onlyOwner {
         require(!winnersSelected);
-        
-        uint256 randomNum = getRandomNumber();
-        // do this
-        
+        uint256 blockValue = uint256(blockhash(block.number.sub(1)));
+        getRandomNumber(blockValue);
         for (uint256 i = 0; i < _addresses.length; i++) {
-            addressList.push(_addresses[i]);
-            addressCount++;
+    		addressList.push(_addresses[i]);
+    		addressCount++;
         }
     }
     
@@ -518,4 +516,4 @@ contract RandomWinner is Ownable, VRFConsumerBase {
     function isWinner(address _address) public view returns (bool) {
         return winnersMapping[_address];
     }
-} 
+}
