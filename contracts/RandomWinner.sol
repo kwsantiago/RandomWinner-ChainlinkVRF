@@ -393,14 +393,30 @@ abstract contract VRFConsumerBase is VRFRequestIDBase {
 }
 
 contract RandomWinnerFactory {
-    IERC20 linkToken = IERC20(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
+    IERC20 linkToken;
+    RandomWinner randomWinner;
     address public randomWinnerAddress;
-    uint internal _amount = 0.3 * 10 ** 18;
+    address[] winners;
+    
+    constructor() public {
+        linkToken = IERC20(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
+    }
+    
     function createRandomWinner(address[] memory _addresses) external {
-        RandomWinner randomWinner = new RandomWinner();
+        uint _amount = 0.3 * 10 ** 18; // 0.3 LINK
+        randomWinner = new RandomWinner();
         linkToken.transfer(address(randomWinner), _amount);
         randomWinner.updateAddressList(_addresses);
         randomWinnerAddress = address(randomWinner);
+    }
+    
+    function selectWinners(uint256 count) external {
+        randomWinner.selectWinners(count);
+        winners = randomWinner.getWinners();
+    }
+    
+    function getWinners() public view returns (address[] memory) {
+        return winners;
     }
 }
 
@@ -446,7 +462,7 @@ contract RandomWinner is Ownable, VRFConsumerBase {
     /** 
      * Requests randomness from a user-provided seed
      */
-    function getRandomNumber(uint256 userProvidedSeed) public returns (bytes32 requestId) {
+    function getRandomNumber(uint256 userProvidedSeed) internal returns (bytes32 requestId) {
         require(LINK.balanceOf(address(this)) > randomFee, "Not enough LINK - fill contract with faucet");
         return requestRandomness(keyHash, randomFee, userProvidedSeed);
     }
