@@ -1,48 +1,69 @@
 import React, { useState } from "react";
-import { generateNewContract } from "./randomWinner.js";
+import { newRandomWinnerContract, newWinner } from "./smartContract.js"
+import { Textarea, Box, Button, Heading, Text } from "rimble-ui";
 
 const Result = ({ token }) => (
     <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        }}>
-    { token }
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    }}>
+        { token }
     </div>
 );
 
 const RandomWinner = () => {
-    const [result, setResult] = useState([]);
+    const [contract, setContract] = useState([]);
+    const [winner, setWinner] = useState([]);
 
     const genNewContract = async function genContract() {
-        const result = await generateNewContract();
-        console.log(result);
-        setResult(result);
+        const contract = await newRandomWinnerContract();
+        setContract(contract);
+    };
+
+    const getNewWinner = async function genWinner() {
+        const winner = await newWinner();
+        setWinner(winner);
     };
 
     return (
-    <div>
-        <h1 style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            }}>Random Winner with Chainlink VRF</h1>
+      <Box mt={3}>
         <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            }}>
-        <button
-            width={[1, "auto", "auto"]}
-            mt={2}
-            mb={2}
-            onClick={genNewContract}
-        >
-        Select Winners
-      </button>
-      </div>
-      <Result token={result}/>
-    </div>
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        }}>
+            <Heading>Random Winner with Chainlink VRF</Heading>
+        </div>
+        <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        }}>
+            <label for="addressList">Address List:</label>
+            <Textarea placeholder='["address1","address2"]' lineHeight={3}></Textarea>
+        </div>
+        <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        }}>
+        <Button mt={3} onClick={genNewContract}>
+            Create New Contract
+        </Button>
+        </div>
+        <Result token={contract}/>
+        <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        }}>
+        <Button mt={2} onClick={getNewWinner}>
+            Get New Winner
+        </Button>
+        </div>
+        <Result token={winner}/>
+      </Box>
     );
 };
 
