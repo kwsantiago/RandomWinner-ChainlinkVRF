@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { newRandomWinnerContract, newWinner } from "./smartContract.js"
-import { Textarea, Box, Button, Heading, Text } from "rimble-ui";
+import { EthAddress, Textarea, Box, Button, Heading, Text } from "rimble-ui";
 
 const Result = ({ token }) => (
     <div style={{
@@ -14,6 +14,7 @@ const Result = ({ token }) => (
 
 const RandomWinner = () => {
     const [contract, setContract] = useState([]);
+    const [addressList, setAddressList] = useState([]);
     const [winner, setWinner] = useState([]);
 
     const genNewContract = async function genContract() {
@@ -40,29 +41,28 @@ const RandomWinner = () => {
         alignItems: 'center',
         justifyContent: 'center',
         }}>
-            <label for="addressList">Address List:</label>
-            <Textarea placeholder='["address1","address2"]' lineHeight={3}></Textarea>
+            <Textarea placeholder='["address1","address2"]' rows={4} />
         </div>
         <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         }}>
-        <Button mt={3} onClick={genNewContract}>
+        <Button mt={3} mb={3} onClick={genNewContract}>
             Create New Contract
         </Button>
         </div>
-        <Result token={contract}/>
+        <EthAddress address={contract} textLabels />
         <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         }}>
-        <Button mt={2} onClick={getNewWinner}>
+        <Button mt={3} mb={3} onClick={getNewWinner}>
             Get New Winner
         </Button>
         </div>
-        <Result token={winner}/>
+        <EthAddress address={winner} textLabels />
       </Box>
     );
 };
