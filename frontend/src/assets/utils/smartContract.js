@@ -4,11 +4,6 @@ const { eth } = web3;
 
 const factoryABI = [
 	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address[]",
@@ -20,6 +15,24 @@ const factoryABI = [
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "count",
+				"type": "uint256"
+			}
+		],
+		"name": "selectWinners",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	},
 	{
 		"inputs": [],
@@ -46,23 +59,10 @@ const factoryABI = [
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "count",
-				"type": "uint256"
-			}
-		],
-		"name": "selectWinners",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	}
 ]
 
-const factoryAddress = "0xf14879d8b5C59002dc1396fEce7a2c456e04d976";
+const factoryAddress = "0xA592E1D38bf586071ac34AF3dfF025A5fD1F1CaF";
 const factoryContract = new eth.Contract(factoryABI, factoryAddress);
 
 const testAddressList = ["0x6a717a5c747c091AFC5958891c2cd452c7A5beD2","0x6da74A271C51ac4B7B5A81a30059B38D5481FF73","0x033F6B3147eBa5ab0913409D46aC3082FCDb5cF8","0x9C65C5A69e69C67E8e340e893CfCa9A0844d4800","0x0cb510E2F16C36ce039Ee3164330D5F00ECf9eAC","0xe63Cd3474b504435c9F44f8b8135deb6459b32C7"];
