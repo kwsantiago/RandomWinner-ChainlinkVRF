@@ -34,13 +34,6 @@ const RandomWinner = () => {
         alignItems: 'center',
         justifyContent: 'center',
         }}>
-            <Heading>Random Winner with Chainlink VRF</Heading>
-        </div>
-        <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        }}>
             <Textarea placeholder='["address1","address2"]' rows={4} />
         </div>
         <div style={{
