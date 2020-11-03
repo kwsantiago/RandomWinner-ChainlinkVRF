@@ -6,6 +6,7 @@
 pragma solidity ^0.6.0;
 
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/math/SafeMath.sol";
 
 // 
 /*
@@ -119,7 +120,7 @@ library SafeMath_Chainlink {
     *
     * Requirements:
     * - Subtraction cannot overflow.
-    */
+   */
   function sub(uint256 a, uint256 b) internal pure returns (uint256) {
     require(b <= a, "SafeMath:subtraction overflow");
     uint256 c = a - b;
@@ -393,6 +394,8 @@ abstract contract VRFConsumerBase is VRFRequestIDBase {
 }
 
 contract RandomWinnerFactory {
+    using SafeMath for uint;
+    
     IERC20 linkToken;
     RandomWinner randomWinner;
     address public randomWinnerAddress;
@@ -402,10 +405,12 @@ contract RandomWinnerFactory {
         linkToken = IERC20(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
     }
     
-    function createRandomWinner(address[] memory _addresses) external {
+    function createRandomWinner(address[] calldata _addresses) external {
         uint _amount = 0.3 * 10 ** 18; // 0.3 LINK
+        uint blockValue = uint256(blockhash(block.number.sub(1)));
         randomWinner = new RandomWinner();
         linkToken.transfer(address(randomWinner), _amount);
+        randomWinner.getRandomNumber(blockValue);
         randomWinner.updateAddressList(_addresses);
         randomWinnerAddress = address(randomWinner);
     }
@@ -462,7 +467,7 @@ contract RandomWinner is Ownable, VRFConsumerBase {
     /** 
      * Requests randomness from a user-provided seed
      */
-    function getRandomNumber(uint256 userProvidedSeed) internal returns (bytes32 requestId) {
+    function getRandomNumber(uint256 userProvidedSeed) external returns (bytes32 requestId) {
         require(LINK.balanceOf(address(this)) > randomFee, "Not enough LINK - fill contract with faucet");
         return requestRandomness(keyHash, randomFee, userProvidedSeed);
     }
@@ -476,8 +481,6 @@ contract RandomWinner is Ownable, VRFConsumerBase {
     
     function updateAddressList(address[] memory _addresses) public onlyOwner {
         require(!winnersSelected);
-        uint256 blockValue = uint256(blockhash(block.number.sub(1)));
-        getRandomNumber(blockValue);
         for (uint256 i = 0; i < _addresses.length; i++) {
     		addressList.push(_addresses[i]);
     		addressCount++;
