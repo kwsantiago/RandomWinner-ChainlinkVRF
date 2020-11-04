@@ -81,7 +81,7 @@ contract RandomWinner is Ownable, VRFConsumerBase {
     /** 
      * Requests randomness from a user-provided seed
      */
-    function getRandomNumber(uint256 userProvidedSeed) external returns (bytes32 requestId) {
+    function getRandomNumber(uint256 userProvidedSeed) external onlyOwner returns (bytes32 requestId) {
         require(LINK.balanceOf(address(this)) > randomFee, "Not enough LINK - fill contract with faucet");
         return requestRandomness(keyHash, randomFee, userProvidedSeed);
     }
