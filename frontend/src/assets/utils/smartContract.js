@@ -103,6 +103,8 @@ const newRandomWinnerContract = async () => {
 }
 
 const newWinner = async (childAddress) => {
+    if(childAddress == "")
+        return [];
     const childContract = new eth.Contract(childContractABI, childAddress);
     const winner = await childContract.methods.getWinners().call();
     return winner[0];
