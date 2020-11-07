@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Heading } from "rimble-ui";
 
 const CardComponent = ({ children }) => (
-  <Card width={"auto"} maxWidth={"855px"} mx={"auto"} px={[3, 3, 4]}>
+  <Card width={"auto"} maxWidth={"730px"} mx={"auto"} px={[3, 3, 4]}>
         <div style={{
         display: 'flex',
         alignItems: 'center',

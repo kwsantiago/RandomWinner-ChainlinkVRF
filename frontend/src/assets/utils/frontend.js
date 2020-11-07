@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { newRandomWinnerContract, newWinner } from "./smartContract.js"
-import { Form, EthAddress, Textarea, Box, Button, Heading, Text } from "rimble-ui";
+import { EthAddress, Box, Button } from "rimble-ui";
 
 const Result = ({ token }) => (
     <div style={{
@@ -29,12 +29,13 @@ const RandomWinner = () => {
 
     return (
       <Box mt={3}>
+        <form>
         <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         }}>
-            <Textarea placeholder='["address1","address2"]' rows={4} />
+            <textarea rows="10" cols="50"></textarea>
         </div>
         <div style={{
         display: 'flex',
@@ -45,7 +46,8 @@ const RandomWinner = () => {
             Create New Contract
         </Button>
         </div>
-        <EthAddress address={contract} textLabels />
+        </form>
+        <EthAddress address={contract} />
         <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -55,7 +57,7 @@ const RandomWinner = () => {
             Get New Winner
         </Button>
         </div>
-        <EthAddress address={winner} textLabels />
+        <EthAddress address={winner} />
       </Box>
     );
 };
