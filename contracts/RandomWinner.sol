@@ -24,18 +24,9 @@ contract RandomWinnerFactory {
         uint blockValue = uint256(blockhash(block.number.sub(1)));
         randomWinner = new RandomWinner();
         linkToken.transfer(address(randomWinner), _amount);
-        randomWinner.getRandomNumber(blockValue);
         randomWinner.updateAddressList(_addresses);
+        randomWinner.getRandomNumber(blockValue);
         randomWinnerAddress = address(randomWinner);
-    }
-    
-    function selectWinners(uint256 count) external {
-        randomWinner.selectWinners(count);
-        winners = randomWinner.getWinners();
-    }
-    
-    function getWinners() public view returns (address[] memory) {
-        return winners;
     }
 }
 
@@ -91,6 +82,7 @@ contract RandomWinner is Ownable, VRFConsumerBase {
      */
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
         randomResult = randomness;
+        selectWinners(1);
     }
     
     function updateAddressList(address[] memory _addresses) public onlyOwner {
@@ -101,7 +93,7 @@ contract RandomWinner is Ownable, VRFConsumerBase {
         }
     }
     
-    function selectWinners(uint256 count) public onlyOwner {
+    function selectWinners(uint256 count) internal {
         require(randomResult != 0);
         require((count + winnerCount) < addressCount);
 
@@ -118,13 +110,13 @@ contract RandomWinner is Ownable, VRFConsumerBase {
             bool winnerSelected = false;
             uint256 nonce = 0;
             do {
-                winnerSeed = uint256(keccak256(abi.encodePacked(previousWinnerSeed, i, nonce));
+                winnerSeed = uint256(keccak256(abi.encodePacked(previousWinnerSeed, i, nonce)));
                 winnerIndex =  winnerSeed % addressCount;
                 winner = addressList[winnerIndex];
                 nonce++;
                 
                 winnerSelected = !winnersMapping[winner];
-            } while (!winnerSelected);
+            }while (!winnerSelected);
             
             winners.push(winner);
             winnersMapping[winner] = true;

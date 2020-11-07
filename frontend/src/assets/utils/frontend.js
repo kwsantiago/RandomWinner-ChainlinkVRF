@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { newRandomWinnerContract, newWinner } from "./smartContract.js"
-import { EthAddress, Textarea, Box, Button, Heading, Text } from "rimble-ui";
+import { Form, EthAddress, Textarea, Box, Button, Heading, Text } from "rimble-ui";
 
 const Result = ({ token }) => (
     <div style={{
@@ -23,7 +23,7 @@ const RandomWinner = () => {
     };
 
     const getNewWinner = async function genWinner() {
-        const winner = await newWinner();
+        const winner = await newWinner(contract);
         setWinner(winner);
     };
 
