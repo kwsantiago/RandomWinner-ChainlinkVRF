@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { newRandomWinnerContract, newWinner } from "./smartContract.js"
 import { EthAddress, Box, Button } from "rimble-ui";
+import { useInterval } from "../shared/hooks/useInterval";
 
 const Result = ({ token }) => (
     <div style={{
@@ -33,14 +34,14 @@ const RandomWinner = () => {
     };
 
     return (
-      <Box mt={3}>
+      <Box>
         <form>
         <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         }}>
-            <textarea rows="10" cols="50" onChange={handleChange}></textarea>
+            <textarea rows="10" cols="50" placeholder="0x4eaC9A8c7a6c3a869CDBff4E06cb552148749206 0x3808C441402D0418C52237B697bBC5D18c84839A 0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa 0x0cb510E2F16C36ce039Ee3164330D5F00ECf9eAC 0x6a717a5c747c091AFC5958891c2cd452c7A5beD2 0x6da74A271C51ac4B7B5A81a30059B38D5481FF73 0x033F6B3147eBa5ab0913409D46aC3082FCDb5cF8 0x9C65C5A69e69C67E8e340e893CfCa9A0844d4800 0x0cb510E2F16C36ce039Ee3164330D5F00ECf9eAC" onChange={handleChange}></textarea>
         </div>
         </form>
         <div style={{
