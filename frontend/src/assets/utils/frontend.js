@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { newRandomWinnerContract, newWinner } from "./smartContract.js"
 import { EthAddress, Box, Button } from "rimble-ui";
-import { useInterval } from "../shared/hooks/useInterval";
 
 const Result = ({ token }) => (
     <div style={{
