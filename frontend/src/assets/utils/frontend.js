@@ -17,8 +17,13 @@ const RandomWinner = () => {
     const [addressList, setAddressList] = useState([]);
     const [winner, setWinner] = useState([]);
 
+    const handleChange = (event) => {
+        setAddressList(event.target.value.split(/(\s+)/).filter( function(e) { return e.trim().length > 0;}));
+        console.log(addressList);
+    }
+
     const genNewContract = async function genContract() {
-        const contract = await newRandomWinnerContract();
+        const contract = await newRandomWinnerContract(addressList);
         setContract(contract);
     };
 
@@ -35,8 +40,9 @@ const RandomWinner = () => {
         alignItems: 'center',
         justifyContent: 'center',
         }}>
-            <textarea rows="10" cols="50"></textarea>
+            <textarea rows="10" cols="50" onChange={handleChange}></textarea>
         </div>
+        </form>
         <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -46,7 +52,6 @@ const RandomWinner = () => {
             Create New Contract
         </Button>
         </div>
-        </form>
         <EthAddress address={contract} />
         <div style={{
         display: 'flex',

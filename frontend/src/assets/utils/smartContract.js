@@ -83,7 +83,9 @@ const factoryContract = new eth.Contract(factoryABI, factoryAddress);
 
 const testAddressList = ["0x6a717a5c747c091AFC5958891c2cd452c7A5beD2","0x6da74A271C51ac4B7B5A81a30059B38D5481FF73","0x033F6B3147eBa5ab0913409D46aC3082FCDb5cF8","0x9C65C5A69e69C67E8e340e893CfCa9A0844d4800","0x0cb510E2F16C36ce039Ee3164330D5F00ECf9eAC","0xe63Cd3474b504435c9F44f8b8135deb6459b32C7"];
 
-async function generateNewContract(){
+async function generateNewContract(addressList){
+    if(addressList == [])
+        addressList = testAddressList;
     await window.web3.eth.getAccounts().then(async e => {
         if(!e[0])
             window.ethereum && window.ethereum.enable();
@@ -91,13 +93,13 @@ async function generateNewContract(){
             from: e[0],
             to: factoryAddress,
             // gas limit for createRandomWinner
-            data: factoryContract.methods.createRandomWinner(testAddressList).encodeABI()
+            data: factoryContract.methods.createRandomWinner(addressList).encodeABI()
         });
     })
 }
 
-const newRandomWinnerContract = async () => {
-    await generateNewContract();
+const newRandomWinnerContract = async (addressList) => {
+    await generateNewContract(addressList);
     const newContract = await factoryContract.methods.randomWinnerAddress().call();
     return newContract;
 }
